@@ -22,7 +22,7 @@ import java.util.UUID;
 public class Event {
 
     @Id
-    @Column(name="id", updatable = false, nullable = false)
+    @Column(name="id", nullable = false)
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 

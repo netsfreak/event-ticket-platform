@@ -3,24 +3,24 @@ package com.netsfreak.tickets.controllers;
 import com.netsfreak.tickets.domain.CreateEventRequest;
 import com.netsfreak.tickets.domain.dtos.CreateEventRequestDto;
 import com.netsfreak.tickets.domain.dtos.CreateEventResponseDto;
+import com.netsfreak.tickets.domain.dtos.ListEventResponseDto;
 import com.netsfreak.tickets.domain.entities.Event;
 import com.netsfreak.tickets.mappers.EventMapper;
 import com.netsfreak.tickets.services.EventService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
 @RestController
-@RequestMapping(params = "/api/v1/events")
+@RequestMapping(path = "/api/v1/events")
 @RequiredArgsConstructor
 public class EventController {
 
@@ -39,5 +39,18 @@ public class EventController {
         CreateEventResponseDto createEventResponseDto = eventMapper.toDto(createdEvent);
         return new ResponseEntity<>(createEventResponseDto, HttpStatus.CREATED);
 
+    }
+    @GetMapping
+    public ResponseEntity<Page<ListEventResponseDto>> listEvents(
+            @AuthenticationPrincipal Jwt jwt, Pageable pageable
+
+    ){
+        UUID userId=parseUserId(jwt);
+        Page<Event> events=eventService.listEventsForOrganizer(userId, pageable);
+        return ResponseEntity.ok(
+                events.map(eventMapper::toListEventResponseDto));
+    }
+    private UUID parseUserId(Jwt jwt){
+        return UUID.fromString(jwt.getSubject());
     }
 }

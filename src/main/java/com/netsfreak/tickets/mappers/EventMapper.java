@@ -2,11 +2,10 @@ package com.netsfreak.tickets.mappers;
 
 import com.netsfreak.tickets.domain.CreateEventRequest;
 import com.netsfreak.tickets.domain.CreateTicketTypeRequest;
-import com.netsfreak.tickets.domain.dtos.CreateEventRequestDto;
-import com.netsfreak.tickets.domain.dtos.CreateEventResponseDto;
-import com.netsfreak.tickets.domain.dtos.CreateTicketTypeRequestDto;
+import com.netsfreak.tickets.domain.dtos.*;
 import com.netsfreak.tickets.domain.entities.Event;
 import com.netsfreak.tickets.domain.entities.EventStatusEnum;
+import com.netsfreak.tickets.domain.entities.TicketType;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
@@ -19,5 +18,7 @@ public interface EventMapper {
 
     CreateEventResponseDto toDto(Event event);
 
+    ListEventTicketTypeResponseDto toDto(TicketType ticketType);
 
+    ListEventResponseDto toListEventResponseDto(Event event);
 }
